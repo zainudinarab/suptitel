@@ -55,6 +55,11 @@ Route::get(
     [SubtitleController::class, 'output']
 );
 
+Route::get(
+    '/api/live-subtitle',
+    [SubtitleController::class, 'getLiveJson']
+);
+
 
 
 Route::get('/', function () {
