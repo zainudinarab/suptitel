@@ -3,6 +3,9 @@
 
 <head>
     <meta charset="utf-8">
+    <!-- Tambahkan Google Font Amiri -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
 
     <style>
         body {
@@ -21,12 +24,11 @@
 
         .box {
             display: inline-block;
-
             background: rgba(0, 0, 0, .55);
-
-            padding: 15px 30px;
-
+            padding: 30px 60px;
             border-radius: 10px;
+            line-height: 2.2;
+            /* Penting untuk teks Arab ber-harakat */
         }
 
         .word {
@@ -44,12 +46,13 @@
                 0 0 5px #000,
                 0 0 10px #000,
                 0 0 20px #000;
-            transition: all 0.3s ease;
-            margin: 0 10px;
+            transition: color 0.4s ease, text-shadow 0.4s ease;
+            display: inline;
+            /* Mengembalikan aliran teks alami seperti kalimat utuh */
         }
 
         .done {
-            color: #00ff66;
+            color: #99ffbb;
             /* Warna kata yang sudah dibaca */
             opacity: 0.7;
         }
@@ -57,8 +60,8 @@
         .active {
             color: #ffd700;
             /* Warna kata yang sedang dibaca */
-            font-size: 84px;
-            transform: scale(1.1);
+            text-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -74,7 +77,7 @@
         async function updateOutput() {
             try {
                 const response = await fetch(
-                '/api/live-subtitle'); // Anda perlu mendaftarkan route ini di web.php/api.php
+                    '/api/live-subtitle'); // Anda perlu mendaftarkan route ini di web.php/api.php
                 const data = await response.json();
 
                 const currentState = JSON.stringify(data);
@@ -92,7 +95,8 @@
                     let cls = 'word';
                     if (i < data.current_word) cls += ' done';
                     else if (i == data.current_word) cls += ' active';
-                    html += `<span class="${cls}">${word}</span>`;
+                    html +=
+                        `<span class="${cls}">${word}</span> `; // Tambahkan spasi asli agar kata tidak menempel
                 });
                 html += '</div>';
                 container.innerHTML = html;

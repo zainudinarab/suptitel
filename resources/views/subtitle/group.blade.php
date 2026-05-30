@@ -7,6 +7,8 @@
     <title>{{ $group->nama }}</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tambahkan Google Font Amiri -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #121212;
@@ -37,18 +39,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
+            font-family: 'Amiri', serif;
         }
 
         .word-active {
             color: #ffd700;
             font-weight: bold;
-            text-decoration: underline;
+            text-shadow: 0 0 10px #ffd700;
         }
 
         .word-pending {
             opacity: 0.5;
+        }
+
+        .preview-box span {
+            display: inline;
         }
 
         .btn-control {
@@ -73,9 +80,12 @@
             <div class="preview-box" dir="rtl">
                 @if ($live && $live->item)
                     @foreach ($live->words as $index => $word)
-                        <span class="mx-2 {{ $index == $live->current_word ? 'word-active' : 'word-pending' }}">
-                            {{ $word }}
-                        </span>
+                        <span
+                            class="{{ $index == $live->current_word ? 'word-active' : 'word-pending' }}">{{ $word }}</span>
+                        {{-- Spasi antar kata --}}
+                        @if (!$loop->last)
+                            &nbsp;
+                        @endif
                     @endforeach
                 @else
                     <span class="text-muted">Tidak ada subtitle aktif</span>
