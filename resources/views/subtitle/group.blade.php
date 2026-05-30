@@ -146,14 +146,14 @@
                     <th width="50">No</th>
                     <th>Judul</th>
                     <th>Isi</th>
-                    <th width="100">Aksi</th>
+                    <th width="150">Aksi</th>
                 </tr>
                 @foreach ($group->items as $item)
                     <tr class="{{ $live && $live->subtitle_item_id == $item->id ? 'table-active-live' : '' }}">
                         <td>{{ $item->urutan }}</td>
                         <td>{{ $item->judul ?? '-' }}</td>
                         <td dir="rtl">{{ Str::limit($item->isi, 50) }}</td>
-                        <td>
+                        <td class="d-flex gap-1">
                             <form method="POST" action="/subtitle/activate/{{ $item->id }}">
                                 @csrf
                                 <button
@@ -161,6 +161,10 @@
                                     {{ $live && $live->subtitle_item_id == $item->id ? 'Aktif' : 'Pilih' }}
                                 </button>
                             </form>
+                            <button class="btn btn-sm btn-outline-warning"
+                                onclick="openEditModal({{ json_encode($item) }})">
+                                Edit
+                            </button>
                         </td>
                     </tr>
                 @endforeach
@@ -168,7 +172,55 @@
         </div>
     </div>
 
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-white border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title">Edit Subtitle</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form id="editForm" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Judul</label>
+                            <input type="text" name="judul" id="edit_judul"
+                                class="form-control bg-dark text-white border-secondary">
+                        </div>
+                        <div class="mb-3">
+                            <label>Urutan</label>
+                            <input type="number" name="urutan" id="edit_urutan"
+                                class="form-control bg-dark text-white border-secondary">
+                        </div>
+                        <div class="mb-3">
+                            <label>Isi</label>
+                            <textarea name="isi" id="edit_isi" rows="5" class="form-control bg-dark text-white border-secondary"
+                                dir="rtl" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-warning">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+
+        function openEditModal(item) {
+            document.getElementById('editForm').action = `/subtitle/item/${item.id}/update`;
+            document.getElementById('edit_judul').value = item.judul || '';
+            document.getElementById('edit_urutan').value = item.urutan;
+            document.getElementById('edit_isi').value = item.isi;
+            editModal.show();
+        }
+
         function control(action) {
             fetch(`/subtitle/${action}`, {
                 method: 'POST',

@@ -47,6 +47,18 @@ class SubtitleController extends Controller
         return back();
     }
 
+    public function updateItem(Request $request, $id)
+    {
+        $item = SubtitleItem::findOrFail($id);
+        $item->update([
+            'judul' => $request->judul,
+            'isi' => $request->isi,
+            'urutan' => $request->urutan ?? 0
+        ]);
+
+        return back();
+    }
+
     public function storeItem(Request $request)
     {
         SubtitleItem::create([

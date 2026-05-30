@@ -26,6 +26,11 @@ Route::post(
 );
 
 Route::post(
+    '/subtitle/item/{id}/update',
+    [SubtitleController::class, 'updateItem']
+);
+
+Route::post(
     '/subtitle/activate/{id}',
     [SubtitleController::class, 'activateItem']
 );
